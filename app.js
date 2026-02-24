@@ -59,3 +59,45 @@ async function loadFeaturedProducts() {
     }
 }
 
+async function loadCatalog(categoryId = '') {
+    const productsContainer = document.getElementById('products-list');
+    let url = `${base_url}/products`;
+
+    if (categoryId) {
+        url = `${base_url}/products/?categoryId=${categoryId}`;
+    }
+
+    try {
+        productsContainer.innerHTML = '<div class="loader">Buscando produtos...</div>';
+        const response = await fetch(url);
+        const products = await response.json();
+
+        productsContainer.innerHTML = products.length > 0
+            ? products.map(product => createProductCard(product)).join('')
+            : '<p>Nenhum produto encontrado nesta categoria.</p>';
+    } catch (error) {
+        console.error("Erro ao carregar catalogo: ", error);
+    }
+}
+
+async function loadCategories() {
+    const select = document.getElementById('category-filter');
+    try {
+        const response = await fetch (`${base_url}/categories`);
+        const categories = await response.json();
+
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat.id;
+            option.textContent = cat.name;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar categorias: ", error);
+    }
+}
+
+window.filterProducts = (id) => {
+    loadCatalog(id);
+};
+
