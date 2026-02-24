@@ -101,3 +101,36 @@ window.filterProducts = (id) => {
     loadCatalog(id);
 };
 
+async function loadProductDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const productid = params.get('id');
+    const container = document.getElementById('productdetail');
+
+    if(!productid) {
+        window.location.href = 'menu.html';
+        return;
+    }
+
+    try {
+        const response = await fetch (`${base_url}/products/${productId}`);
+        if (!response.ok) throw new Error("Produto não encontrado");
+
+        const product = await response.json();
+
+        container.innerHTML = `
+            <img src="${product.images[0]}" alt="${product.title}" class="detail-img">
+            <div class="detail-info">
+                <span class="card-category" style="font-size:1rem; margin-bottom:1rem; display:block;">
+                    Categoria: ${product.category.name}
+                </span>
+                <h1>${product.title}</h1>
+                <div class="detail-price">R$ ${product.price.toFixed(2)}</div>
+                <p class="detail-description">${product.description}</p>
+                <button class="btn-primary">Adicionar ao Carrinho</button>
+            </div>
+        `;
+    } catch (error) {
+        console.error("Erro ao carregar detalhes: ", error);
+        container.innerHTML = "<h2>Produto não encontrado ou erro na API.</h2>"
+    }
+}
