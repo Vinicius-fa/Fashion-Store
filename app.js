@@ -27,3 +27,22 @@ function initTheme() {
         localStorage.setItem('theme', newTheme);
     };
 }
+
+function createProductCard(product) {
+    return `
+    <article class="card">
+      <div class="card-img-wrapper">
+        <img src="${product.images[0]}" alt="${product.title}" class="card-img" onerror="this.src='https://placehold.co/600x400?text=Imagem+Indisponível'">
+      </div>
+      <div class="card-content">
+        <span class="card-category">${product.category.name}</span>
+        <h3 class="card-title">${product.title}</h3>
+        <div class="card-footer">
+          <span class="card-price">R$ ${product.price.toFixed(2)}</span>
+          <a href="detail.html?id=${product.id}" class="btn-primary btn-small">Ver Detalhes</a>
+        </div>
+      </div>
+    </article>      
+    `;
+}
+
