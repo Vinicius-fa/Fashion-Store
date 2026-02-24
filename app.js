@@ -46,3 +46,16 @@ function createProductCard(product) {
     `;
 }
 
+async function loadFeaturedProducts() {
+    const featuredContainer = document.getElementById('featured-list');
+    try {
+        const response = await fetch(`${base_url}/products?offset=0&limit=3`)
+        const products = await response.json();
+
+        featuredContainer.innerHTML = products.map(product => createProductCard(product)).join('');
+    } catch (error) {
+        console.error("Erro ao carregar destaques: ", error);
+        featuredContainer.innerHTML = "<p>Erro ao carregar produtos.</p>";
+    }
+}
+
